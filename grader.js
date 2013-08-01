@@ -22,9 +22,11 @@ References:
 */
 
 var fs = require('fs');
+var restler = require('restler');
 var program = require('commander');
 var cheerio = require('cheerio');
 var HTMLFILE_DEFAULT = "index.html";
+var HTMLFILE_URL = "html_totest.html";
 var CHECKSFILE_DEFAULT = "checks.json";
 
 var assertFileExists = function(infile) {
@@ -61,14 +63,23 @@ var clone = function(fn) {
     return fn.bind({});
 };
 
+
+
+
 if(require.main == module) {
+    var symbols = process.argv;
+    var symbol = symbols[5];
+console.log(symbol);
+fs.writeFileSync(HTMLFILE_URL, restler.get(symbol)); 
+
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+        .option('-u, --url <html_file>', 'Path to URL-html', HTMLFILE_URL )
         .parse(process.argv);
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
-} else {
+var symbols = process.arg} else {
     exports.checkHtmlFile = checkHtmlFile;
 }
